@@ -6,7 +6,7 @@ Requires=network.target sound.target wifi-dongle.service
 [Service]
 Type=simple
 Group=audio
-ExecStart="/home/pi/app/start_app.sh"
+ExecStart="/home/blinky/app/start_app.sh"
 Restart=always
 RestartSec=5
 

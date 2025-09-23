@@ -1,1 +1,1 @@
-SUBSYSTEM=="usb", ATTR{busnum}=="1", ATTR{devpath}=="1", ACTION=="add", RUN+="/home/pi/cfg/wlan_dongle.sh"
+SUBSYSTEM=="usb", ATTR{busnum}=="1", ATTR{devpath}=="1", ACTION=="add", RUN+="/home/blinky/cfg/wlan_dongle.sh"
