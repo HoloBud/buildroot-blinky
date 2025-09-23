@@ -1,0 +1,14 @@
+[Unit]
+Description="Holo device systemd service"
+After=wifi-dongle.service
+Requires=network.target sound.target wifi-dongle.service
+
+[Service]
+Type=simple
+Group=audio
+ExecStart="/home/pi/app/start_app.sh"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=wifi-dongle.service

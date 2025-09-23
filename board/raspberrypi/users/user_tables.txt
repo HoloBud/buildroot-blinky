@@ -1,0 +1,1 @@
+blinky -1 blinky -1 po14ke12mon /home/blinky /bin/sh - Main user
