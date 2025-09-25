@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case "$1" in
+    start)
+        echo "Connecting to WiFi..."
+        wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+        sleep 5
+        udhcpc -i wlan0 -b
+        ;;
+    stop)
+        killall wpa_supplicant
+        killall udhcpc
+        ;;
+esac

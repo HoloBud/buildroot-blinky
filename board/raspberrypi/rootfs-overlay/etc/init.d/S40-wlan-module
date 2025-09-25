@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case "$1" in
+    start)
+        echo "Loading WiFi modules..."
+        modprobe brcmfmac # This loads all the other dependent modules
+        sleep 2
+        ip link set wlan0 up
+        ;;
+    stop)
+        modprobe -r brcmfmac
+        ;;
+    *) exit 1 ;;
+esac
