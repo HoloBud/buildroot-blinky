@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case "$1" in
+    start)
+        echo "Loading USB Audio modules..."
+        modprobe snd_usb_audio # This loads all the other dependent modules
+        # Wait for devices to be fully created
+        sleep 1
+
+        # Fix permissions
+        chgrp audio /dev/snd/* 2>/dev/null
+        chmod 660 /dev/snd/* 2>/dev/null
+        ;;
+    stop)
+        modprobe -r snd_usb_audio
+        ;;
+    *) exit 1 ;;
+esac
