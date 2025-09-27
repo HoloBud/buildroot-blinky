@@ -6,6 +6,12 @@ case "$1" in
         modprobe rtw88_8821cu
         echo "Switching the mode of the USB dongle..."
         usb_modeswitch -v 0bda -p 1a2b -V 0bda -P 1a2b -M "5553424312345678000000000000061b000000020000000000000000000000"
+        sleep 1
+        ip link set wlan1 up
+        echo "Connecting usb dongle to WiFi..."
+        wpa_supplicant -B -i wlan1 -c /etc/wpa_supplicant_wlan1.conf
+        sleep 5
+        udhcpc -i wlan1 -b
         ;;
     stop)
         # modprobe -r snd_usb_audio
