@@ -34,6 +34,14 @@ ROOTPATH_TMP="$(mktemp -d)"
 
 rm -rf "${GENIMAGE_TMP}"
 
+# Fill with zeros partition that will contain hash tree for dm-verity verification
+dd if=/dev/zero of="${BINARIES_DIR}"/hashtree.bin bs=1M count=10
+# Generate hash tree and add it at the beginning of the partition
+
+# Obtain here root hash + salt of partition and add it to bootargs
+
+
+
 genimage \
 	--rootpath "${ROOTPATH_TMP}"   \
 	--tmppath "${GENIMAGE_TMP}"    \

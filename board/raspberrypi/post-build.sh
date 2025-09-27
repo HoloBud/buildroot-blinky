@@ -24,4 +24,12 @@ mkdir -p "${TARGET_DIR}/etc/systemd/system/wifi-dongle.service.wants"
 ln -sf /etc/systemd/system/holo-device.service \
    "${TARGET_DIR}/etc/systemd/system/wifi-dongle.service.wants/holo-device.service"
 
+echo "Copying WiFi firmware files..."
+mkdir -p "${TARGET_DIR}/lib/firmware/rtw88"
+mkdir -p "${TARGET_DIR}/lib/firmware/rtlwifi"
+
+# Copy from build directory to target
+cp output/build/linux-firmware-*/rtw88/* "${TARGET_DIR}/lib/firmware/rtw88/"
+cp output/build/linux-firmware-*/rtlwifi/* "${TARGET_DIR}/lib/firmware/rtlwifi/"
+
 # Delete unnecessary files after testing images if modifying configs turns out too challenging
