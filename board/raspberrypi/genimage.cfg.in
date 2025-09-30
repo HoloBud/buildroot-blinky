@@ -22,4 +22,9 @@ image sdcard.img {
 		partition-type = 0x83
 		image = "rootfs.ext4"
 	}
+
+	partition hashtree {
+		partition-type = 0xff
+		image = "hashtree.bin"
+	}
 }
