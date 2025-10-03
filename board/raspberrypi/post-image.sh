@@ -8,7 +8,7 @@ GENIMAGE_CFG="${BOARD_DIR}/genimage-${BOARD_NAME}.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
 # Generate hash tree and add it at the beginning of the partition
-sudo dd if=/dev/zero of="${BINARIES_DIR}/hashtree.bin" bs=1M count=4
+sudo dd if=/dev/zero of="${BINARIES_DIR}/hashtree.bin" bs=1M count=5
 
 VERITY_OUTPUT=$(veritysetup format "${BINARIES_DIR}/rootfs.ext2" "${BINARIES_DIR}/hashtree.bin" --hash=sha256 --data-block-size=1024 2>&1)
 echo "$VERITY_OUTPUT"
@@ -28,6 +28,11 @@ DM_PARAMETER="dm-mod.waitfor=/dev/mmcblk0p2,/dev/mmcblk0p3 dm-mod.create=\"vroot
 $DATA_BLOCKS 1 $HASH_ALGORITHM $TREE_ROOT_HASH $TREE_SALT\""
 
 echo "$DM_PARAMETER" >> "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
+
+# For investigation purposes create an app and its hashtree partition
+sudo dd if=/dev/zero of="${BINARIES_DIR}/app_hashtree.bin" bs=1M count=5
+
+sudo veritysetup format "${BINARIES_DIR}/rootfs.ext2" "${BINARIES_DIR}/app_hashtree.bin" --hash=sha256 --data-block-size=1024
 
 # generate genimage from template if a board specific variant doesn't exists
 if [ ! -e "${GENIMAGE_CFG}" ]; then
