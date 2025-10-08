@@ -3,6 +3,35 @@
 set -u
 set -e
 
+# Verity enabler function
+recursive_verity_() {
+   local dir="$1"
+   local key_file="$2"
+
+   if [ ! -d "$dir" ]; then
+      return 1
+   fi
+
+   echo "Processing directory: $dir"
+   for i in "${dir}"/*; do
+      if [ -f "$i" ]; then
+         # Generate the signature of the file
+         fsverity sign "$i" "$i".sig --key="$key_file"
+         # Sign the file
+         fsverity enable "$i" --signature="$i".sig
+         # There's no need to keep the signature of the file in the host machine
+         rm -f "$i".sig
+         echo "Enabled verity on $i"
+      fi
+   done
+
+   for subdir in "${dir}"/*; do
+      if [ -d "$subdir" ]; then
+         recursive_verity_ "$subdir" "$key_file"
+      fi
+   done
+}
+
 # Add a console on tty1
 if [ -e ${TARGET_DIR}/etc/inittab ]; then
     grep -qE '^tty1::' ${TARGET_DIR}/etc/inittab || \
@@ -32,4 +61,8 @@ mkdir -p "${TARGET_DIR}/lib/firmware/rtlwifi"
 cp output/build/linux-firmware-*/rtw88/* "${TARGET_DIR}/lib/firmware/rtw88/"
 cp output/build/linux-firmware-*/rtlwifi/* "${TARGET_DIR}/lib/firmware/rtlwifi/"
 
-# Delete unnecessary files after testing images if modifying configs turns out too challenging
+# Enable verity over home/blinky files
+SIGN_PRIVATE_KEY=/home/luisgiii/fs-verity-keys/combined-key.pem
+LOOK_DIRECTORY="${TARGET_DIR}/home/blinky"
+
+recursive_verity_ "$LOOK_DIRECTORY" "$SIGN_PRIVATE_KEY"

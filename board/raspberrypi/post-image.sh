@@ -34,13 +34,20 @@ ROOTPATH_TMP="$(mktemp -d)"
 
 rm -rf "${GENIMAGE_TMP}"
 
-# Fill with zeros partition that will contain hash tree for dm-verity verification
-dd if=/dev/zero of="${BINARIES_DIR}"/hashtree.bin bs=1M count=10
-# Generate hash tree and add it at the beginning of the partition
+# Enable the verity feature on the rootfs image
+echo "Enabling FS-Verity on RootFS..."
+# 1. Extract content from the EXT2/4 filesystem
+# echo "Extracting filesystem content..."
+# mkdir -p /tmp/rootfs-extract
+# sudo rm -rf /tmp/rootfs-extract/*
+# debugfs -R "rdump / /tmp/rootfs-extract" "${BINARIES_DIR}/rootfs.ext2"
 
-# Obtain here root hash + salt of partition and add it to bootargs
+# # 2. Create proper ext4 filesystem with verity
+# echo "Creating proper ext4 filesystem..."
+# mkfs.ext4 -F -O verity -d /tmp/rootfs-extract "${BINARIES_DIR}/rootfs-proper.ext4" 500M
 
-
+# 3. Replace the original file
+# mv "${BINARIES_DIR}/rootfs-proper.ext4" "${BINARIES_DIR}/rootfs.ext4"
 
 genimage \
 	--rootpath "${ROOTPATH_TMP}"   \
